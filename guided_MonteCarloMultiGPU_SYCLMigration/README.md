@@ -30,7 +30,7 @@ This sample contains two versions in the following folders:
 | Optimized for         | Description
 |:---                   |:---
 | OS                    | Ubuntu* 20.04
-| Hardware              | Intel® Gen9 <br> Gen11 <br> Xeon CPU
+| Hardware              | Intel® Gen9 <br> Gen11 <br> Xeon CPU <br> Data Center GPU Max
 | Software              | SYCLomatic <br> Intel® oneAPI Base Toolkit (Base Kit)
 
 ## Key Implementation Details
@@ -132,8 +132,8 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
    $ cmake ..( or cmake -D MAX_GPU=1 ..)
    $ make
    ```
-   **Note**: For Intel(R) Data Center GPU Max 1550/1100, enable MAX_GPU=1 during cmake to build with optimization flag.  
-   By default, this command sequence will build the `01_dpct_output`, `02_sycl_migrated` version of the program.
+   **Note**: To build with optimization flag, it is recommended to enable MAX_GPU flag for Intel(R) Data Center GPU Max 1550 or 1100.  
+   By default, this command sequence will build the `02_sycl_migrated` version of the program.
 
 3. Run `02_sycl_migrated` for CPU and GPU.
      ```
@@ -156,28 +156,33 @@ The following example is for `02_sycl_migrated` for GPU on Intel(R) UHD Graphics
 ```
 ./a.out Starting...
 
+Using single CPU thread for multiple GPUs
 MonteCarloMultiGPU
 ==================
 Parallelization method  = streamed
 Problem scaling         = weak
 Number of GPUs          = 1
-Total number of options = 12
+Total number of options = 8192
 Number of paths         = 262144
 main(): generating input data...
 main(): starting 1 host threads...
 main(): GPU statistics, streamed
-GPU Device #0: Intel(R) UHD Graphics P630 [0x3e96]
-Options         : 12
+GPU Device #0: Intel(R) UHD Graphics [0x9a60]
+Options         : 8192
 Simulation paths: 262144
 
-Total time (ms.): 3.139000
+Total time (ms.): 5408.881836
         Note: This is elapsed time for all to compute.
-Options per sec.: 3822.873601
+Options per sec.: 1514.545935
 main(): comparing Monte Carlo and Black-Scholes results...
 Shutting down...
 Test Summary...
-L1 norm        : 6.504269E-04
-Average reserve: 2.790815
+L1 norm        : 4.811539E-04
+Average reserve: 11.875348
+
+NOTE: The CUDA Samples are not meant for performance measurements. Results may vary when GPU Boost is enabled.
+
+Test passed
 
 ```
 ## License
