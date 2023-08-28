@@ -80,13 +80,7 @@ inline double endCallValue(double S, double X, double r,
 // per option. It is fastest when the number of thread blocks times the work per
 // block is high enough to keep the GPU busy.
 ////////////////////////////////////////////////////////////////////////////////
-/*
-DPCT1110:3: The total declared local variable size in device function
-MonteCarloOneBlockPerOption exceeds 128 bytes and may cause high register
-pressure. Consult with your hardware vendor to find the total register size
-available and adjust the code, or use smaller sub-group size to avoid high
-register pressure.
-*/
+
 static void MonteCarloOneBlockPerOption(
 
     oneapi::mkl::rng::device::philox4x32x10<1> *__restrict rngStates,
@@ -135,11 +129,7 @@ static void MonteCarloOneBlockPerOption(
 
     // Reduce shared memory accumulators
     // and write final result to global memory
-    /*
-    DPCT1065:4: Consider replacing sycl::nd_item::barrier() with
-    sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
+
     item_ct1.barrier();
     sumReduce<real, SUM_N, THREAD_N>(s_SumCall, s_Sum2Call, cta, tile32,
                                      &d_CallValue[optionIndex], item_ct1);
@@ -267,16 +257,10 @@ extern "C" void MonteCarloGPU(TOptionPlan *plan, dpct::queue_ptr stream) {
                      plan->optionCount * sizeof(__TOptionData))));
 
   stream->submit([&](sycl::handler &cgh) {
-    /*
-    DPCT1101:37: 'SUM_N' expression was replaced with a value. Modify the code
-    to use the original expression, provided in comments, if it is correct.
-    */
+
     sycl::local_accessor<real, 1> s_SumCall_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
-    /*
-    DPCT1101:38: 'SUM_N' expression was replaced with a value. Modify the code
-    to use the original expression, provided in comments, if it is correct.
-    */
+
     sycl::local_accessor<real, 1> s_Sum2Call_acc_ct1(
         sycl::range<1>(256 /*SUM_N*/), cgh);
 
