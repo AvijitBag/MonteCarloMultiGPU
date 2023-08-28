@@ -70,10 +70,7 @@ int adjustProblemSize(int GPU_N, int default_nOptions) {
     dpct::device_info deviceProp;
     checkCudaErrors(DPCT_CHECK_ERROR(
         dpct::dev_mgr::instance().get_device(i).get_device_info(deviceProp)));
-    /*
-    DPCT1005:20: The SYCL device version is different from CUDA Compute
-    Compatibility. You may need to rewrite this code.
-    */
+
     int cudaCores = _ConvertSMVer2Cores(deviceProp.get_major_version(),
                                         deviceProp.get_minor_version()) *
                     deviceProp.get_max_compute_units();
@@ -112,10 +109,7 @@ StopWatchInterface **hTimer = NULL;
 
 static CUT_THREADPROC solverThread(TOptionPlan *plan) {
   // Init GPU
-  /*
-  DPCT1093:21: The "plan->device" device may be not the one intended for use.
-  Adjust the selected device if needed.
-  */
+
   checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan->device)));
 
   dpct::device_info deviceProp;
@@ -159,10 +153,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   std::chrono::time_point<std::chrono::steady_clock> events_ct1_i;
 
   for (int i = 0; i < nPlans; i++) {
-    /*
-    DPCT1093:22: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     checkCudaErrors(DPCT_CHECK_ERROR(
         (streams[i]) = dpct::get_current_device().create_queue()));
@@ -175,10 +166,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
 
   for (int i = 0; i < nPlans; i++) {
     // set the target device to perform initialization on
-    /*
-    DPCT1093:23: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
 
     dpct::device_info deviceProp;
@@ -192,10 +180,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   }
 
   for (int i = 0; i < nPlans; i++) {
-    /*
-    DPCT1093:24: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     checkCudaErrors(
         DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
@@ -206,35 +191,19 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   sdkStartTimer(&hTimer[0]);
 
   for (int i = 0; i < nPlans; i++) {
-    /*
-    DPCT1093:25: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
 
     // Main computations
     MonteCarloGPU(&plan[i], streams[i]);
 
-    /*
-    DPCT1012:26: Detected kernel execution time measurement pattern and
-    generated an initial code for time measurements in SYCL. You can change the
-    way time is measured depending on your goals.
-    */
-    /*
-    DPCT1024:27: The original code returned the error code that was further
-    consumed by the program logic. This original code was replaced with 0. You
-    may need to rewrite the program logic consuming the error code.
-    */
     events_ct1_i = std::chrono::steady_clock::now();
     checkCudaErrors(
         DPCT_CHECK_ERROR(*events[i] = streams[i]->ext_oneapi_submit_barrier()));
   }
 
   for (int i = 0; i < nPlans; i++) {
-    /*
-    DPCT1093:28: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     events[i]->wait_and_throw();
   }
@@ -243,10 +212,7 @@ static void multiSolver(TOptionPlan *plan, int nPlans) {
   sdkStopTimer(&hTimer[0]);
 
   for (int i = 0; i < nPlans; i++) {
-    /*
-    DPCT1093:29: The "plan[i].device" device may be not the one intended for
-    use. Adjust the selected device if needed.
-    */
+
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(plan[i].device)));
     closeMonteCarloGPU(&plan[i]);
     checkCudaErrors(
@@ -532,10 +498,6 @@ int main(int argc, char **argv) {
 
   for (int i = 0; i < GPU_N; i++) {
     sdkStartTimer(&hTimer[i]);
-    /*
-    DPCT1093:30: The "i" device may be not the one intended for use. Adjust the
-    selected device if needed.
-    */
     checkCudaErrors(DPCT_CHECK_ERROR(dpct::select_device(i)));
   }
 
