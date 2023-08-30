@@ -4,7 +4,7 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 
 | Area                   | Description
 |:---                    |:---
-| What you will learn    | How to begin migrating CUDA to SYCL
+| What you will learn    | Migrate and Map SYCL RNG philox4x32x10<1> equivalent of cuRAND API's
 | Time to complete       | 15 minutes
 | Category               | Code Optimization
 
@@ -132,10 +132,11 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
    $ cmake ..( or cmake -D MAX_GPU=1 ..)
    $ make
    ```
-   **Note**: To build with optimization flag, it is recommended to enable MAX_GPU flag for Intel(R) Data Center GPU Max 1550 or 1100.  
+   **Note**: For Intel(R) Data Center GPU Max 1550 or 1100, to get optimized performace enable MAX_GPU flag during build.
+    
    By default, this command sequence will build the `02_sycl_migrated` version of the program.
 
-3. Run `02_sycl_migrated` for CPU and GPU.
+4. Run `02_sycl_migrated` for CPU and GPU.
      ```
     make run_sm_cpu
     make run_sm_gpu (runs on Level-Zero Backend)
