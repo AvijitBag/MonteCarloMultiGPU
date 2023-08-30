@@ -82,10 +82,6 @@ typedef struct dpct_type_258576 {
   void *d_Buffer;
 
   // random number generator states
-  /*
-  DPCT1032:19: A different random number generator is used. You may need to
-  adjust the code.
-  */
   oneapi::mkl::rng::device::philox4x32x10<1> *rngStates;
 
   // Pseudorandom samples count
