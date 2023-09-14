@@ -4,7 +4,7 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 
 | Area                   | Description
 |:---                    |:---
-| What you will learn    | Migrate and Map SYCL RNG philox4x32x10<1> equivalent of cuRAND API's
+| What you will learn    | How to migrate and map SYCL RNG philox4x32x10<1> equivalent of cuRAND API's
 | Time to complete       | 15 minutes
 | Category               | Code Optimization
 
@@ -14,15 +14,15 @@ The `MonteCarloMultiGPU` sample evaluates fair call price for a given set of Eur
 ## Purpose
 The MonteCarlo Method provides a way to compute expected values by generating random scenarios and then averaging them. The execution of these random scenarios can be parallelized very efficiently. 
 
-With the help of a GPU, we reduce and speed up the problem by parallelizing each path. That is, we can assign each path to a single thread, simulating thousands of them in parallel, with massive savings in computational power and time.
+With the help of a GPU, we reduce and speed up the problem by parallelizing each path. That we can assign each path to a single thread, simulating thousands of them in parallel, with massive savings in computational power and time.
 
-> **Note**: The sample used the open-source SYCLomatic tool that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the Intel® DPC++ Compatibility Tool available to augment Base Toolkit.
+> **Note**: The sample used the open-source [SYCLomatic tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/training/migrate-from-cuda-to-cpp-with-sycl.html) that assists developers in porting CUDA code to SYCL code. To finish the process, you must complete the rest of the coding manually and then tune to the desired level of performance for the target architecture. You can also use the [Intel® DPC++ Compatibility Tool](https://www.intel.com/content/www/us/en/developer/tools/oneapi/dpc-compatibility-tool.html#gs.5g2aqn) available to augment Base Toolkit.
 
 This sample contains two versions in the following folders:
 
 | Folder Name                          | Description
 |:---                                  |:---
-| 01_dpct_output                       | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that has to be manually fixed to get full functionality.
+| 01_dpct_output                       | Contains output of SYCLomatic Tool used to migrate SYCL-compliant code from CUDA code. This SYCL code has some unmigrated code that must be manually fixed to get full functionality. (The code does not functionally work as generated.)
 | 02_sycl_migrated                     | Contains manually migrated SYCL code from CUDA code.
 
 ## Prerequisites
@@ -103,10 +103,10 @@ For this sample, the SYCLomatic tool automatically migrates 100% of the CUDA cod
    ```
    This step creates a JSON file named compile_commands.json with all the compiler invocations and stores the names of the input files and the compiler options.
 
-4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated. The `--use-custom-helper` option will make a copy of dpct header files/functions used in migrated code into the dpct_output folder as include folder.
+4. Pass the JSON file as input to the Intel® SYCLomatic Compatibility Tool. The result is written to a folder named dpct_output. The `--in-root` specifies path to the root of the source tree to be migrated.
 
    ```
-   c2s -p compile_commands.json --in-root ../../.. --use-custom-helper=api
+   c2s -p compile_commands.json --in-root ../../.. --gen-helper-function
    ```
 
 ## Build and Run the `MonteCarloMultiGPU` Sample
